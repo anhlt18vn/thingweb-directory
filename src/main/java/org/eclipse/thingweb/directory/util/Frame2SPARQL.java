@@ -44,15 +44,15 @@ public class Frame2SPARQL
     Object frameObject = JsonUtils.fromString(frame);
 
     //expanded frame object
-    Object expandedframeObject = JsonLdProcessor.expand(frameObject);
+    Object expandedFrameObject = JsonLdProcessor.expand(frameObject);
 
 
     //Get subGraph from the repository by the frame object
-    if (expandedframeObject instanceof  List){
-      expandedframeObject = ((List) expandedframeObject).get(0);
+    if (expandedFrameObject instanceof  List){
+      expandedFrameObject = ((List) expandedFrameObject).get(0);
     }
 
-    Object subGraph = getSubGraph(connection, expandedframeObject);
+    Object subGraph = getSubGraph(connection, expandedFrameObject);
 
     //If subGraph is empty return empty sub Graph
     if (subGraph instanceof List){
@@ -216,93 +216,5 @@ public class Frame2SPARQL
     GraphQueryResult graphQueryResult = connection.prepareGraphQuery(describeQuery).evaluate();
     Model model = QueryResults.asModel(graphQueryResult);
     return model;
-  }
-
-
-
-
-//=====================================================================================================================
-//TEST CODE
-//=====================================================================================================================
-  private Repository inputData(String input) throws IOException {
-
-    Repository repo = new SailRepository(new MemoryStore());
-    repo.initialize();
-    RepositoryConnection connection = repo.getConnection();
-
-    connection.add(new StringReader(input), "", RDFFormat.JSONLD);
-    connection.commit();
-
-    return repo;
-  }
-
-  private void printJsonLd(Model model) throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    Rio.write(model, byteArrayOutputStream, RDFFormat.JSONLD);
-
-    Object object = JsonUtils.fromString(byteArrayOutputStream.toString());
-           object = JsonLdProcessor.compact(object, new HashMap<>(), new JsonLdOptions());
-
-    System.out.println(JsonUtils.toPrettyString(object));
-  }
-  private void testFrame() throws IOException {
-    String input =
-        "{\n"
-            + "  \"@context\": [\"https://w3c.github.io/wot/w3c-wot-td-context.jsonld\"],\n"
-            + "  \"@type\": [\"Thing\"],\n"
-            + "  \"name\": \"MyLampThing\",\n"
-            + "  \"interaction\": [\n"
-            + "      {\n"
-            + "          \"@type\": [\"Property\"],\n"
-            + "          \"name\": \"status\",\n"
-            + "          \"schema\": {\"type\": \"string\"},\n"
-            + "          \"writable\": false,\n"
-            + "          \"observable\": true,\n"
-            + "          \"form\": [{\n"
-            + "              \"href\": \"coaps://mylamp.example.com:5683/status\",\n"
-            + "              \"mediaType\": \"application/json\"\n"
-            + "          }]\n"
-            + "      },\n"
-            + "      {\n"
-            + "          \"@type\": [\"Action\"],\n"
-            + "          \"name\": \"toggle\",\n"
-            + "          \"form\": [{\n"
-            + "              \"href\": \"coaps://mylamp.example.com:5683/toggle\",\n"
-            + "              \"mediaType\": \"application/json\"\n"
-            + "          }]\n"
-            + "      },\n"
-            + "      {\n"
-            + "          \"@type\": [\"Event\"],\n"
-            + "          \"name\": \"overheating\",\n"
-            + "          \"schema\": {\"type\": \"string\"},\n"
-            + "          \"form\": [{\n"
-            + "              \"href\": \"coaps://mylamp.example.com:5683/oh\",\n"
-            + "              \"mediaType\": \"application/json\"\n"
-            + "          }]\n"
-            + "      }\n"
-            + "  ]\n"
-            + "}";
-
-    String frame=
-        "{\"@context\": [\"https://w3c.github.io/wot/w3c-wot-td-context.jsonld\"],\n"
-            + "  \"@type\": [\"Thing\"]}";
-
-
-    RepositoryConnection connection = inputData(input).getConnection();
-    Object object = frame(connection, frame);
-
-    String td = JsonUtils.toPrettyString(object);
-    TDTransform transform = new TDTransform(new ByteArrayInputStream(td.getBytes()));
-                td        = transform.asJsonLd11();
-
-    System.out.println(JsonUtils.toPrettyString(JsonUtils.fromString(td)));
-  }
-
-  public static void main(String[] args){
-    try {
-      (new Frame2SPARQL()).testFrame();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 }
