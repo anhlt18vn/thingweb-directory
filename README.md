@@ -15,7 +15,7 @@ The Thingweb Directory requires Java 1.8.
 
 ### Running the Directory
 
-Download the project and unzip it (see [releases](https://github.com/thingweb/thingweb-directory/releases)). Then, run:
+Download the project and unzip it (see [releases](https://github.com/anhlt18vn/thingweb-directory/releases)). Then, run:
 ```sh
 $ bin/thingweb-directory
 ```
