@@ -21,7 +21,7 @@ tdb:GraphTDB    rdfs:subClassOf  ja:Model      .
 <#all-inf> rdf:type ja:InfModel ;
 	ja:reasoner [ ja:reasonerURL <http://jena.hpl.hp.com/2003/OWLMiniFBRuleReasoner> ] ;
 	ja:baseModel <#all> .
-    
+
 <#all> rdf:type tdb:GraphTDB ;
 	tdb:dataset <#dataset> ;
 	tdb:graphName </all> .

@@ -1,0 +1,17 @@
+{
+  "@context": [
+        "https://w3c.github.io/wot/w3c-wot-td-context.jsonld",
+        "https://w3c.github.io/wot/w3c-wot-common-context.jsonld",
+        {"iot": "http://iotschema.org/"}
+  ],
+  "@type":"Thing",
+  "properties":
+   [
+    {
+      "@type" : "iot:WindStrength"
+    },
+    {
+    "@type" : "iot:TargetTemperature"
+    }
+  ]
+}

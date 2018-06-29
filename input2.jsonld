@@ -1,0 +1,30 @@
+[
+  {
+    "@id":"http://devices/1",
+    "http://properties":
+     [
+       {
+         "@type":"http://type1",
+         "http://label":"DEVICE 1 TYPE1"
+       },
+       {
+         "@type":"http://type2",
+         "http://label":"DEVICE 1 TYPE2"
+       }
+     ]
+  },
+  {
+    "@id":"http://devices/2",
+    "http://properties":
+      [
+        {
+          "@type":"http://type1",
+          "http://label":"DEVICE 2 TYPE1"
+        },
+        {
+          "@type":"http://type3",
+          "http://label":"DEVICE 2 TYPE3"
+        }
+      ]
+  }
+]

@@ -1,5 +1,7 @@
 package org.eclipse.thingweb.directory.servlet;
 
+import com.github.jsonldjava.core.JsonLdOptions;
+import com.github.jsonldjava.core.JsonLdProcessor;
 import com.github.jsonldjava.utils.JsonUtils;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -17,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
 
 /**
  * org.eclipse.thingweb.directory.servlet
@@ -46,30 +49,28 @@ public class TDFramingServlet extends RESTServlet {
     if (resp.isCommitted()) {
       return; // parent class returned an error status
     }
+
     String frame = req.getParameter(QUERY_PARAMETER);
-
-    ThingDirectory.LOG.info(frame);
-
     Frame2SPARQL frame2SPARQL = new Frame2SPARQL();
     RepositoryConnection connection = Connector.getRepositoryConnection();
-    Object framed = frame2SPARQL.frame(connection, frame);
 
-    String td = JsonUtils.toPrettyString(framed);
+    String td;
+    try{
+      Object framed = frame2SPARQL.frame_(connection, frame);
+      td     = JsonUtils.toPrettyString(framed);
+    } catch (IllegalArgumentException e){
+      td = e.getMessage();
+    }
 
-    //reformat the output
-    TDTransform transform = new TDTransform(new ByteArrayInputStream(td.getBytes()));
-    td                    = transform.asJsonLd11();
-    Object framedObject   = JsonUtils.fromString(td);
 
     BufferedResponseWrapper respWrapper = new BufferedResponseWrapper(resp);
 
     if (respWrapper.getStatus() < HttpServletResponse.SC_BAD_REQUEST) {
       OutputStream outputStream = resp.getOutputStream();
-      outputStream.write(JsonUtils.toPrettyString(framedObject).getBytes());
+      outputStream.write(td.getBytes());
       outputStream.close();
     }
   }
-
 
   @Override
   protected String[] getAcceptedContentTypes() {

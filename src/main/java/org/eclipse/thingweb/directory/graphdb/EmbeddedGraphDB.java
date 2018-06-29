@@ -107,26 +107,25 @@ public class EmbeddedGraphDB implements Closeable {
         
         Resource repositoryNode = Models.subject(graph.filter(null, RDF.TYPE, RepositoryConfigSchema.REPOSITORY)).orElse(null);
 
-        graph.add(repositoryNode, RepositoryConfigSchema.REPOSITORYID, 
-        		SimpleValueFactory.getInstance().createLiteral(repositoryId));
+        graph.add(repositoryNode, RepositoryConfigSchema.REPOSITORYID, SimpleValueFactory.getInstance().createLiteral(repositoryId));
 
         if (repositoryLabel != null) {
-            graph.add(repositoryNode, RDFS.LABEL, 
+            graph.add(repositoryNode, RDFS.LABEL,
             		SimpleValueFactory.getInstance().createLiteral(repositoryLabel));
         }
 
-        if (overrides != null) {
-            Resource configNode = (Resource)Models.object(graph.filter(null, SailRepositorySchema.SAILIMPL, null)).orElse(null);
-            for (Map.Entry<String, String> e : overrides.entrySet()) {
-                IRI key = SimpleValueFactory.getInstance().createIRI(OWLIMSailSchema.NAMESPACE + e.getKey());
-                Literal value = SimpleValueFactory.getInstance().createLiteral(e.getValue());
-                graph.remove(configNode, key, null);
-                graph.add(configNode, key, value);
-            }
-        }
+        //TODO disable inference
+//        if (overrides != null) {
+//            Resource configNode = (Resource)Models.object(graph.filter(null, SailRepositorySchema.SAILIMPL, null)).orElse(null);
+//            for (Map.Entry<String, String> e : overrides.entrySet()) {
+//                IRI key = SimpleValueFactory.getInstance().createIRI(OWLIMSailSchema.NAMESPACE + e.getKey());
+//                Literal value = SimpleValueFactory.getInstance().createLiteral(e.getValue());
+//                graph.remove(configNode, key, null);
+//                graph.add(configNode, key, value);
+//            }
+//        }
 
         RepositoryConfig repositoryConfig = RepositoryConfig.create(graph, repositoryNode);
-
         repositoryManager.addRepositoryConfig(repositoryConfig);
     }
 
