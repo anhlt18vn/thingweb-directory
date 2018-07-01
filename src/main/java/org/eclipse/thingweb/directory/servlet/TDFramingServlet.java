@@ -54,13 +54,21 @@ public class TDFramingServlet extends RESTServlet {
     Frame2SPARQL frame2SPARQL = new Frame2SPARQL();
     RepositoryConnection connection = Connector.getRepositoryConnection();
 
-    String td;
+
+
     try{
-      Object framed = frame2SPARQL.frame_(connection, frame);
-      td     = JsonUtils.toPrettyString(framed);
-    } catch (IllegalArgumentException e){
-      td = e.getMessage();
+      //nomarlise frame object as
+      TDTransform tdTransform = new TDTransform(new ByteArrayInputStream(frame.getBytes()));
+      frame = tdTransform.asJsonLd10();
+    }catch (Exception e) {
+      ThingDirectory.LOG.warn("Warn---> " + frame);
+      ThingDirectory.LOG.warn("Can not convert json frame to Jsonld10");
     }
+
+
+
+    Object framed = frame2SPARQL.frame_(connection, frame);
+    String td     = JsonUtils.toPrettyString(framed);
 
 
     BufferedResponseWrapper respWrapper = new BufferedResponseWrapper(resp);

@@ -46,6 +46,10 @@ public class Frame2SPARQLTest {
       "/home/anhlt185/projects/wot/plugfest/2018-bundang/TDs/Fujitsu/Fujitsu-WiFiAgent240AC4114764.jsonld";
   static String td3_siemens_festolive =
       "/home/anhlt185/projects/wot/plugfest/2018-bundang/TDs/Siemens/FestoLive.jsonld";
+  static String td4_intel_light =
+      "/home/anhlt185/projects/wot/plugfest/2018-bundang/TDs/Intel/intel-light.jsonld";
+  static String td5_intel_button =
+      "/home/anhlt185/projects/wot/plugfest/2018-bundang/TDs/Intel/intel-button.jsonld";
 
   static String input1 =
       "/home/anhlt185/projects/thingweb-directory/input1.jsonld";
@@ -65,7 +69,10 @@ public class Frame2SPARQLTest {
   static String frame5 =
       "/home/anhlt185/projects/thingweb-directory/frame5.jsonld";
 
-
+  static String frame6 =
+      "/home/anhlt185/projects/thingweb-directory/frame6.jsonld";
+  static String frame7 =
+      "/home/anhlt185/projects/thingweb-directory/frame7.jsonld";
 
   Repository repository;
 
@@ -84,6 +91,7 @@ public class Frame2SPARQLTest {
     repositoryConnection.commit();
 
     if (isView){
+      System.out.println(JsonUtils.toPrettyString(JsonUtils.fromString(input)));
       Model model = Rio.parse(new StringReader(input), "", RDFFormat.JSONLD);
       printNTripleFromModel(model);
     }
@@ -105,8 +113,19 @@ public class Frame2SPARQLTest {
     return stringBuilder.toString();
   }
 
-  private void viewRepository(){
+  private static String makeFrameObjectFromFile(String filePath){
+    String frame = readStringFromFile(filePath);
 
+    try{
+      //nomarlise frame object as
+      TDTransform tdTransform = new TDTransform(new ByteArrayInputStream(frame.getBytes()));
+      frame = tdTransform.asJsonLd10();
+    }catch (Exception e) {
+      ThingDirectory.LOG.warn("Warn---> " + frame);
+      ThingDirectory.LOG.warn("Can not convert json frame to Jsonld10");
+    }
+
+    return frame;
   }
 
 
@@ -213,15 +232,40 @@ public class Frame2SPARQLTest {
     Frame2SPARQLTest test = new Frame2SPARQLTest();
     Frame2SPARQL frame2SPARQL = new Frame2SPARQL();
 
-    String frame = readStringFromFile(frame4);
-
     try {
-//      test.testFrameFromFile(td3_siemens_festolive, frame5);
-//      test.inputDataByFilePath(td1_panasonic_air_con, false);
-//      test.inputDataByFilePath(td2_fujitsu_wifi_agen, false);
+      test.inputDataByFilePath(td1_panasonic_air_con, false);
+      test.inputDataByFilePath(td2_fujitsu_wifi_agen, true);
       test.inputDataByFilePath(td3_siemens_festolive, false);
-      Object result = frame2SPARQL.frame_(test.repository.getConnection(), frame);
-      ThingDirectory.LOG.info("final result: --> " + JsonUtils.toPrettyString(result));
+//      test.inputDataByFilePath(td5_intel_button, true);
+
+//      System.out.println("Frame 1 ===================================================================================");
+//      Object result1 = (new Frame2SPARQL()).frame_(test.repository.getConnection(), makeFrameObjectFromFile(frame1));
+//      ThingDirectory.LOG.info("final result1: --> " + JsonUtils.toPrettyString(result1));
+
+//      System.out.println("Frame 2 ===================================================================================");
+//      Object result2 = (new Frame2SPARQL()).frame_(test.repository.getConnection(), makeFrameObjectFromFile(frame2));
+//      ThingDirectory.LOG.info("final result2: --> " + JsonUtils.toPrettyString(result2));
+
+      System.out.println("Frame 3 ===================================================================================");
+      Object result3 = (new Frame2SPARQL()).frame_(test.repository.getConnection(), makeFrameObjectFromFile(frame3));
+      ThingDirectory.LOG.info("final result3: --> " + JsonUtils.toPrettyString(result3));
+
+//      System.out.println("Frame 4 ===================================================================================");
+//      Object result4 = (new Frame2SPARQL()).frame_(test.repository.getConnection(), makeFrameObjectFromFile(frame4));
+//      ThingDirectory.LOG.info("final result4: --> " + JsonUtils.toPrettyString(result4));
+
+//      System.out.println("Frame 5 ===================================================================================");
+//      Object result5 = (new Frame2SPARQL()).frame_(test.repository.getConnection(), makeFrameObjectFromFile(frame5));
+//      ThingDirectory.LOG.info("final result5: --> " + JsonUtils.toPrettyString(result5));
+
+//      System.out.println("Frame 6 ===================================================================================");
+//      Object result6 = (new Frame2SPARQL()).frame_(test.repository.getConnection(), makeFrameObjectFromFile(frame6));
+//      ThingDirectory.LOG.info("final result6: --> " + JsonUtils.toPrettyString(result6));
+
+//      System.out.println("Frame 7 ===================================================================================");
+//      Object result7 = (new Frame2SPARQL()).frame_(test.repository.getConnection(), makeFrameObjectFromFile(frame7));
+//      ThingDirectory.LOG.info("final result7: --> " + JsonUtils.toPrettyString(result7));
+
 
     } catch (IOException e) {
       e.printStackTrace();

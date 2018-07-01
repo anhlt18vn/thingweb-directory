@@ -5,8 +5,8 @@
         {"iot": "http://iotschema.org/"}
   ],
   "@type":"Thing",
-  "properties":{
-    "@type":"iot:abcd"
+  "properties": {
+    "@type":["iot:Temperature", "iot:Humidity"]
   },
   "actions":{}
 }

@@ -48,7 +48,7 @@ public class Frame2SPARQL
     context.add("https://w3c.github.io/wot/w3c-wot-td-context.jsonld");
     context.add("https://w3c.github.io/wot/w3c-wot-common-context.jsonld");
     HashMap<String, Object> hashMap = new HashMap<>();
-    hashMap.put("iot", "http://iotschema.org");
+    hashMap.put("iot", "http://iotschema.org/");
     context.add(hashMap);
   }
 
@@ -57,7 +57,7 @@ public class Frame2SPARQL
   static {
     opts = new JsonLdOptions();
     opts.setPruneBlankNodeIdentifiers(true);
-    //opts.setCompactArrays(true);
+//    opts.setCompactArrays(false);
 //    opts.setOmitDefault(false);
   }
 
@@ -98,15 +98,14 @@ public class Frame2SPARQL
     return predicate.equals("@type") ? " a " : " <" + predicate + "> ";
   }
 
-  int level = 0;
+  //int level = 0;
   private boolean removeOptionalProperties(Object input){
-    level ++;
+    //level ++;
 
     if (input instanceof List){
-      if (level == 1){
-        throw new IllegalArgumentException("Frame object must be a single object ");
-      }
-
+//      if (level == 1){
+//        throw new IllegalArgumentException("Frame object must be a single object ");
+//      }
 
       List<Object> listObject = (List<Object>) input;
       List<Object> tobeRemove = new ArrayList<>();
@@ -118,7 +117,7 @@ public class Frame2SPARQL
 
       listObject.removeAll(tobeRemove);
 
-      level--;
+//      level--;
       return listObject.isEmpty();
     }
 
@@ -137,7 +136,7 @@ public class Frame2SPARQL
         }
         else
         {
-          boolean removable = (level!=1) && removeOptionalProperties(value);
+          boolean removable =  removeOptionalProperties(value);// && (level!=1);
 
           if (removable) {
             remove.put(key, value);
@@ -146,19 +145,17 @@ public class Frame2SPARQL
       }
       remove.forEach((String key, Object value)-> map.remove(key));
 
-      level--;
+//      level--;
       return map.isEmpty();
     }
 
-    level--;
+//    level--;
     return true;
   }
 
   private String createQueryPatternForRootObject(String rootPattern, String subject, String predicate, Object in){
 
     if (in instanceof List){
-      ThingDirectory.LOG.info("List --> " + subject + " " + predicate + " "  +in.toString());
-
       List<Object> listObject = (List<Object>) in;
       for (Object object:listObject){
         rootPattern = rootPattern + createQueryPatternForRootObject("", subject, predicate, object);
@@ -223,10 +220,20 @@ public class Frame2SPARQL
 
     ThingDirectory.LOG.info("before removing "  + JsonUtils.toPrettyString(frameJsonLdObject));
 
+
+//    if (frameJsonLdObject instanceof Map){
+//      //TODO quick fix --> unstable code
+//      Object graph = ((Map<String, Object>) frameJsonLdObject).get("@graph");
+//      if (graph!=null){
+//        frameJsonLdObject = ((List<Object>)graph).get(0);
+//      }
+//    }
+    //level = 0;//TODO : reset level [quick fix]
+
     //remove the optional properties from the frame
     removeOptionalProperties(frameJsonLdObject);
 
-    ThingDirectory.LOG.info("after removing "  + JsonUtils.toPrettyString(frameJsonLdObject));
+//    ThingDirectory.LOG.info("after removing "  + JsonUtils.toPrettyString(frameJsonLdObject));
 
     //create describe query to get the Root Object
     String query = createDescribeQueryForRootObject(frameJsonLdObject);
@@ -242,23 +249,12 @@ public class Frame2SPARQL
 
     Object compact = JsonLdProcessor.compact(frameJsonldObject, new HashMap<>(), opts);
 
-
     Model model   = describeRootObject(connection, compact);
 
     return model;
   }
 
   public Object frame_(RepositoryConnection connection, String jsonldFrame) throws IOException {
-    try{
-    TDTransform tdTransform = new TDTransform(new ByteArrayInputStream(jsonldFrame.getBytes()));
-                jsonldFrame = tdTransform.asJsonLd10();
-
-    }catch (Exception e) {
-      ThingDirectory.LOG.warn(e.toString());
-      ThingDirectory.LOG.warn("Can not convert jsonframe to Jsonld10");
-    }
-
-    ThingDirectory.LOG.warn(jsonldFrame);
 
     Object jsonldFrameObject  = JsonUtils.fromString(jsonldFrame);
            jsonldFrameObject  =  BNodeRemover.removePollutedBnode(jsonldFrameObject);
@@ -272,7 +268,6 @@ public class Frame2SPARQL
            jsonldInput = JsonLdProcessor.compact(jsonldInput, context, opts);
 
     try {
-
       ThingDirectory.LOG.info("JsonLD Input Object -->:" + JsonUtils.toPrettyString(jsonldInput));
       ThingDirectory.LOG.info("JsonLD Frame Object -->:" + JsonUtils.toPrettyString(jsonldFrameObject));
 

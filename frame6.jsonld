@@ -1,0 +1,13 @@
+{
+  "@context": [ "https://w3c.github.io/wot/w3c-wot-td-context.jsonld",
+               { "iot": "http://iotschema.org/"}],
+  "@type" : "Thing",
+  "properties" : {
+    "@type" : "iot:SwitchStatus",
+    "forms": {
+      "security" : {
+        "scheme" : "basic"
+      }
+    }
+  }
+}
