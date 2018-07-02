@@ -11,6 +11,7 @@
     "@type": "iot:CurrentLevel"
   },
   "actions": {
+    "@embed":"@never",
     "@type": "iot:TurnOff"
   }
 }
