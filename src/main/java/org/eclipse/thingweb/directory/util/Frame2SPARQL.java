@@ -267,6 +267,8 @@ public class Frame2SPARQL
     Object jsonldInput  = JsonUtils.fromString(buffer.toString());
            jsonldInput = JsonLdProcessor.compact(jsonldInput, context, opts);
 
+    jsonldFrameObject =  JsonUtils.fromString(jsonldFrame);
+
     try {
       ThingDirectory.LOG.info("JsonLD Input Object -->:" + JsonUtils.toPrettyString(jsonldInput));
       ThingDirectory.LOG.info("JsonLD Frame Object -->:" + JsonUtils.toPrettyString(jsonldFrameObject));

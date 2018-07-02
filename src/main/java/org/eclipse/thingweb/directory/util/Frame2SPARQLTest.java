@@ -246,13 +246,13 @@ public class Frame2SPARQLTest {
 //      Object result2 = (new Frame2SPARQL()).frame_(test.repository.getConnection(), makeFrameObjectFromFile(frame2));
 //      ThingDirectory.LOG.info("final result2: --> " + JsonUtils.toPrettyString(result2));
 
-      System.out.println("Frame 3 ===================================================================================");
-      Object result3 = (new Frame2SPARQL()).frame_(test.repository.getConnection(), makeFrameObjectFromFile(frame3));
-      ThingDirectory.LOG.info("final result3: --> " + JsonUtils.toPrettyString(result3));
+//      System.out.println("Frame 3 ===================================================================================");
+//      Object result3 = (new Frame2SPARQL()).frame_(test.repository.getConnection(), makeFrameObjectFromFile(frame3));
+//      ThingDirectory.LOG.info("final result3: --> " + JsonUtils.toPrettyString(result3));
 
-//      System.out.println("Frame 4 ===================================================================================");
-//      Object result4 = (new Frame2SPARQL()).frame_(test.repository.getConnection(), makeFrameObjectFromFile(frame4));
-//      ThingDirectory.LOG.info("final result4: --> " + JsonUtils.toPrettyString(result4));
+      System.out.println("Frame 4 ===================================================================================");
+      Object result4 = (new Frame2SPARQL()).frame_(test.repository.getConnection(), makeFrameObjectFromFile(frame4));
+      ThingDirectory.LOG.info("final result4: --> " + JsonUtils.toPrettyString(result4));
 
 //      System.out.println("Frame 5 ===================================================================================");
 //      Object result5 = (new Frame2SPARQL()).frame_(test.repository.getConnection(), makeFrameObjectFromFile(frame5));

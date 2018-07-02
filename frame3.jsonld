@@ -11,7 +11,7 @@
       "@type" : "iot:WindStrength"
     },
     {
-    "@type" : "iot:TargetTemperature"
+        "@type" : "iot:TargetTemperature"
     }
   ]
 }

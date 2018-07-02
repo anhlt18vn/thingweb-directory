@@ -12,7 +12,8 @@
   },
   "actions":{
    "StartPump": {
-              "@type": "iot:TurnOn"
+        "@embed":"@never",
+        "@type": "iot:TurnOn"
     }
   }
 }
